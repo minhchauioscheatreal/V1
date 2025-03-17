@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu V1</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('image.png') no-repeat center center/cover;
+            overflow: hidden;
+            position: relative;
+        }
+        .menu {
+            width: 250px;
+            background: black;
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            border: 2px solid cyan;
+            box-shadow: 0 0 15px cyan;
+        }
+        .menu::before {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: url('image.png') no-repeat center center/cover;
+            border-radius: 15px;
+            z-index: -1;
+            filter: blur(10px);
+            animation: wave 3s infinite linear;
+        }
+        @keyframes wave {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .menu-header {
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-header span {
+            animation: rainbow 3s infinite linear;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+        }
+        @keyframes rainbow {
+            0% { background-position: 0%; }
+            100% { background-position: 100%; }
+        }
+        .menu-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .menu-tabs {
+            display: flex;
+            border-bottom: 1px solid #444;
+            margin-top: 10px;
+        }
+        .menu-tabs div {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .menu-tabs .active {
+            background: #002244;
+            border-radius: 5px;
+        }
+        .menu-content {
+            margin-top: 10px;
+            position: relative;
+        }
+        .loading {
+            display: none;
+            color: yellow;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .success {
+            display: none;
+            color: lightgreen;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .info-content {
+            display: none;
+            margin-top: 10px;
+        }
+        .menu-tabs div.active + .info-content {
+            display: block;
+        }
+        .menu-content div {
+            margin-top: 10px;
+        }
+        /* Hiệu ứng sao động lấp lánh */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            opacity: 0.8;
+            box-shadow: 0 0 5px white;
+            animation: twinkle 2s infinite ease-in-out;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+    </style>
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.menu-tabs div').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.menu-content, .info-content').forEach(el => el.style.display = 'none');
+            tab.classList.add('active');
+            if (tab.innerText === 'Info') {
+                document.querySelector('.info-content').style.display = 'block';
+            } else {
+                document.querySelector('.menu-content').style.display = 'block';
+            }
+        }
+
+        function simulateLoading(id) {
+            const loadingText = document.querySelector(`.loading[data-id='${id}']`);
+            const successText = document.querySelector(`.success[data-id='${id}']`);
+            loadingText.style.display = 'block';
+            successText.style.display = 'none';
+            
+            setTimeout(() => {
+                loadingText.style.display = 'none';
+                successText.style.display = 'block';
+            }, 2000);
+        }
+
+        function createStars() {
+            const starContainer = document.querySelector('.stars');
+            for (let i = 0; i < 50; i++) {
+                let star = document.createElement('div');
+                star.classList.add('star');
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                starContainer.appendChild(star);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', createStars);
+    </script>
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="menu">
+        <div class="menu-header">
+            <span>@minhchauioscheat</span>
+            <button>&times;</button>
+        </div>
+        <div class="menu-tabs">
+            <div class="active" onclick="switchTab(this)">Main</div>
+            <div onclick="switchTab(this)">Info</div>
+        </div>
+        <div class="menu-content">
+            <div>
+                <input type="checkbox" id="device" onclick="simulateLoading('device')">
+                <label for="device"> Network Activation</label>
+                <div class="loading" data-id="device">Loading...</div>
+                <div class="success" data-id="device">✔ Loaded Successfully</div>
+            </div>
+            <div>
+                <input type="checkbox" id="sensitivity" onclick="simulateLoading('sensitivity')">
+                <label for="sensitivity"> Screen Sensitivity</label>
+                <div class="loading" data-id="sensitivity">Loading...</div>
+                <div class="success" data-id="sensitivity">✔ Loaded Successfully</div>
+            </div>
+        </div>
+        <div class="info-content">
+            <textarea placeholder="Layperson Sbot V1 | V2 Sẽ Sớm Được Update!!!"></textarea>
+        </div>
+    </div>
+</body>
+</html>
